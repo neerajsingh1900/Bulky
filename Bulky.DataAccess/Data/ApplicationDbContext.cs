@@ -1,10 +1,14 @@
 ﻿using Bulky.Models;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using System;
 
 namespace Bulky.DataAccess.Data
 {
-    public class ApplicationDbContext:DbContext
+    //DbContext
+    //identity user not required
+    public class ApplicationDbContext:IdentityDbContext<IdentityUser>
     {
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext>options):base(options)
         {
@@ -13,8 +17,14 @@ namespace Bulky.DataAccess.Data
       //  It acts like an in-memory collection, but it’s backed by the database.
         public DbSet<Category> categories { get; set; }
         public DbSet<Product> Products { get; set; }
+
+        public DbSet<ApplicationUser> ApplicationUsers { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+
+            //this line is due to identity only
+            base.OnModelCreating(modelBuilder);
+            
             modelBuilder.Entity<Category>().HasData(
                 new Category { Id=1,Name = "Action",DisplayOrder=1},
                 new Category { Id = 2, Name = "SciFi", DisplayOrder = 2 },
